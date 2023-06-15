@@ -3,7 +3,22 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const routes = require('./routes/index');
 
-// const { getCard } = require("./controllers/cards");
+const {
+  getUsers,
+  getUserById,
+  createUser,
+  updateProfile,
+  updateAvatar,
+} = require("./controllers/users");
+
+const {
+  getCard,
+  createCard,
+  deleteCardById,
+  putCardLike,
+  deleteCardLike,
+} = require("./controllers/cards");
+
 
 const { PORT = 3000 } = process.env;
 
@@ -21,23 +36,24 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.get("/cards", getCard);
+app.get("/users", getUsers);
 
-app.use(routes);
+app.get("/users/:userId", getUserById);
 
-// app.use('/users', require('./routes/users'));
-// app.use('/cards', require('./routes/cards'));
+app.post("/users", createUser);
 
-// app.get("/cards", getCard);
-// app.post("/cards", createCard);
-// app.delete("/cards/:cardId", deleteCardById);
-// app.put("/cards/:cardId/likes", putCardLike);
-// app.delete("/cards/:cardId/likes", deleteCardLike);
+app.patch("/users/me", updateProfile);
 
-// app.get("/users", getUsers);
-// app.post("/users", createUser);
-// app.patch("/users/me", updateProfile);
-// app.patch("/users/me/avatar", updateAvatar);
+app.patch("/users/me/avatar", updateAvatar);
+
+app.get("/cards", getCard);
+app.post("/cards", createCard);
+app.delete("/cards/:cardId", deleteCardById);
+app.put("/cards/:cardId/likes", putCardLike);
+app.delete("/cards/:cardId/likes", deleteCardLike);
+
+// app.use(routes);
+
 
 app.listen(PORT, () => {
   console.log(`Server run at ${PORT}`);

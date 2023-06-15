@@ -14,12 +14,15 @@ const getUsers = (req, res) => {
 };
 
 const getUserById = (req, res) => {
-  User.findById(req.params.id)
+  const {userId} = req.params
+
+  User.findById(userId)
     .then((user) => {
       if (!user) {
-        return res
+        res
           .status(ERROR_NOT_FOUND)
           .send({ message: "Пользователь по указанному _id не найден" });
+        return;
       }
       res.status(STATUS_OK).send({ data: user });
     })

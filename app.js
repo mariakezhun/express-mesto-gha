@@ -1,10 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-// const users = require('./routes/users');
-// const cards = require('./routes/cards');
+const routes = require('./routes/index');
 
-const { getCard } = require("./controllers/cards");
+// const { getCard } = require("./controllers/cards");
 
 const { PORT = 3000 } = process.env;
 
@@ -22,14 +21,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/cards", getCard);
+// app.get("/cards", getCard);
 
-// app.use(users);
-// app.use(cards);
-
-// app.get('/', (req, res) => {
-//   res.send('hello world!');
-// })
+app.use(routes);
 
 // app.use('/users', require('./routes/users'));
 // app.use('/cards', require('./routes/cards'));

@@ -35,7 +35,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/*", (req, res) =>
+app.use("/404", (req, res) =>
   res.status(404).send({ message: "Страница не сущетсвует" })
 );
 

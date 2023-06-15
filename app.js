@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const routes = require('./routes/index');
+const routes = require("./routes/index");
 
 const {
   getUsers,
@@ -19,7 +19,6 @@ const {
   deleteCardLike,
 } = require("./controllers/cards");
 
-
 const { PORT = 3000 } = process.env;
 
 mongoose.connect("mongodb://127.0.0.1:27017/mestodb");
@@ -35,6 +34,10 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use("*", (req, res) =>
+  res.status(404).send({ message: "Страница не сущетсвует" })
+);
 
 app.get("/users", getUsers);
 
@@ -53,7 +56,6 @@ app.put("/cards/:cardId/likes", putCardLike);
 app.delete("/cards/:cardId/likes", deleteCardLike);
 
 // app.use(routes);
-
 
 app.listen(PORT, () => {
   console.log(`Server run at ${PORT}`);

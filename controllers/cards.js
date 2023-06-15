@@ -1,9 +1,9 @@
 const Card = require("../models/card");
-const ERROR_INTERNAL_SERVER = 500;
-const ERROR_BAD_REQUEST = 400;
-const ERROR_NOT_FOUND = 404;
-const STATUS_CREATED = 201;
-const STATUS_OK = 200;
+const {ERROR_INTERNAL_SERVER,
+  ERROR_BAD_REQUEST,
+  ERROR_NOT_FOUND,
+  STATUS_CREATED,
+  STATUS_OK} = require('../utils/status')
 
 const getCard = (req, res) => {
   Card.find({})
@@ -87,9 +87,10 @@ const deleteCardLike = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "CastError") {
-        return res.status(ERROR_BAD_REQUEST).send({
+        res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные данные для снятия лайка",
         });
+        return
       }
       return res
         .status(ERROR_INTERNAL_SERVER)

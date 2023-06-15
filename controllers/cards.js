@@ -1,13 +1,14 @@
 const Card = require("../models/card");
-const {ERROR_INTERNAL_SERVER,
+const {
+  ERROR_INTERNAL_SERVER,
   ERROR_BAD_REQUEST,
   ERROR_NOT_FOUND,
   STATUS_CREATED,
-  STATUS_OK} = require('../utils/status')
+} = require("../utils/status");
 
 const getCard = (req, res) => {
   Card.find({})
-    .then((card) => res.status(STATUS_OK).send({ data: card }))
+    .then((card) => res.send({ data: card }))
     .catch(() =>
       res.status(ERROR_INTERNAL_SERVER).send({ message: "Ошибка по умолчанию" })
     );
@@ -38,7 +39,7 @@ const deleteCardById = (req, res) => {
           .status(ERROR_NOT_FOUND)
           .send({ message: "Пользователь по указанному _id не найден" });
       }
-      res.status(STATUS_OK).send({ data: card });
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === "CastError") {
@@ -64,7 +65,7 @@ const putCardLike = (req, res) => {
           .status(ERROR_NOT_FOUND)
           .send({ message: "Передан несуществующий _id карточки" });
       }
-      res.status(STATUS_OK).send({ data: card });
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === "CastError") {
@@ -90,14 +91,14 @@ const deleteCardLike = (req, res) => {
           .status(ERROR_NOT_FOUND)
           .send({ message: "Передан несуществующий _id карточки" });
       }
-      res.status(STATUS_OK).send({ data: card });
+      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === "CastError") {
         res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные данные для снятия лайка",
         });
-        return
+        return;
       }
       return res
         .status(ERROR_INTERNAL_SERVER)

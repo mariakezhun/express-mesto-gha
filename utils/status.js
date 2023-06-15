@@ -8,5 +8,4 @@ module.exports = {
   ERROR_BAD_REQUEST,
   ERROR_NOT_FOUND,
   STATUS_CREATED,
-  STATUS_OK,
 };

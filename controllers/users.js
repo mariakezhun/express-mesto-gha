@@ -1,17 +1,16 @@
-const User = require("../models/user");
+/* eslint-disable consistent-return */
+const User = require('../models/user');
 const {
   ERROR_INTERNAL_SERVER,
   ERROR_BAD_REQUEST,
   ERROR_NOT_FOUND,
   STATUS_CREATED,
-} = require("../utils/status");
+} = require('../utils/status');
 
 const getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .catch(() =>
-      res.status(ERROR_INTERNAL_SERVER).send({ message: "Ошибка по умолчанию" })
-    );
+    .catch(() => res.status(ERROR_INTERNAL_SERVER).send({ message: 'Ошибка по умолчанию' }));
 };
 
 const getUserById = (req, res) => {
@@ -22,20 +21,20 @@ const getUserById = (req, res) => {
       if (!user) {
         res
           .status(ERROR_NOT_FOUND)
-          .send({ message: "Пользователь по указанному _id не найден" });
+          .send({ message: 'Пользователь по указанному _id не найден' });
         return;
       }
       res.send({ data: user });
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         return res.status(ERROR_BAD_REQUEST).send({
-          message: "Переданы некорректные данные пользователя",
+          message: 'Переданы некорректные данные пользователя',
         });
       }
       return res
         .status(ERROR_INTERNAL_SERVER)
-        .send({ message: "Ошибка по умолчанию" });
+        .send({ message: 'Ошибка по умолчанию' });
     });
 };
 
@@ -45,14 +44,14 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.status(STATUS_CREATED).send({ data: user }))
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({
-          message: "Переданы некорректные данные при создании пользователя",
+          message: 'Переданы некорректные данные при создании пользователя',
         });
       }
       return res
         .status(ERROR_INTERNAL_SERVER)
-        .send({ message: "Ошибка по умолчанию" });
+        .send({ message: 'Ошибка по умолчанию' });
     });
 };
 
@@ -66,25 +65,25 @@ const updateProfile = (req, res) => {
       new: true,
       runValidators: true,
       upsert: true,
-    }
+    },
   )
     .then((user) => {
       res.send({ data: user });
       if (!user) {
         return res
           .status(ERROR_NOT_FOUND)
-          .send({ message: "Пользователь по указанному _id не найден" });
+          .send({ message: 'Пользователь по указанному _id не найден' });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({
-          message: "Переданы некорректные данные при обновлении профиля",
+          message: 'Переданы некорректные данные при обновлении профиля',
         });
       }
       return res
         .status(ERROR_INTERNAL_SERVER)
-        .send({ message: "Ошибка по умолчанию" });
+        .send({ message: 'Ошибка по умолчанию' });
     });
 };
 
@@ -98,25 +97,25 @@ const updateAvatar = (req, res) => {
       new: true,
       runValidators: true,
       upsert: true,
-    }
+    },
   )
     .then((user) => {
       if (!user) {
         return res
           .status(ERROR_NOT_FOUND)
-          .send({ message: "Пользователь по указанному _id не найден" });
+          .send({ message: 'Пользователь по указанному _id не найден' });
       }
       res.send({ data: user });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         return res.status(ERROR_BAD_REQUEST).send({
-          message: "Переданы некорректные данные при обновлении аватара",
+          message: 'Переданы некорректные данные при обновлении аватара',
         });
       }
       return res
         .status(ERROR_INTERNAL_SERVER)
-        .send({ message: "Ошибка по умолчанию" });
+        .send({ message: 'Ошибка по умолчанию' });
     });
 };
 

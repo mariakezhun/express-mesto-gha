@@ -1,16 +1,16 @@
-const router = require("express").Router();
+const router = require('express').Router();
 const {
   getCard,
   createCard,
   deleteCardById,
   putCardLike,
   deleteCardLike,
-} = require("../controllers/cards");
+} = require('../controllers/cards');
 
-router.get("/cards", getCard);
-router.post("/cards", createCard);
-router.delete("/cards/:cardId", deleteCardById);
-router.put("/cards/:cardId/likes", putCardLike);
-router.delete("/cards/:cardId/likes", deleteCardLike);
+router.get('/cards', getCard);
+router.post('/cards', createCard);
+router.delete('/cards/:cardId', deleteCardById);
+router.put('/cards/:cardId/likes', putCardLike);
+router.delete('/cards/:cardId/likes', deleteCardLike);
 
 module.exports = router;

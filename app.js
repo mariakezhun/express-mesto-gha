@@ -35,9 +35,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("*", (req, res) =>
-  res.status(404).send({ message: "Страница не сущетсвует" })
-);
+// app.use("*", (req, res) =>
+//   res.status(404).send({ message: "Страница не сущетсвует" })
+// );
 
 app.get("/users", getUsers);
 

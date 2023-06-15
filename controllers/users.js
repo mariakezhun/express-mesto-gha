@@ -44,7 +44,7 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.status(STATUS_CREATED).send({ data: user }))
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === "ValidationError") {
         return res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные данные при создании пользователя",
         });
@@ -76,7 +76,7 @@ const updateProfile = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === "ValidationError") {
         return res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные данные при обновлении профиля",
         });

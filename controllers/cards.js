@@ -19,7 +19,7 @@ const createCard = (req, res) => {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(STATUS_CREATED).send({ data: card }))
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === "ValidationError") {
         return res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные данные при создании карточки",
         });
@@ -40,9 +40,16 @@ const deleteCardById = (req, res) => {
       }
       res.status(STATUS_OK).send({ data: card });
     })
-    .catch(() =>
-      res.status(ERROR_INTERNAL_SERVER).send({ message: "Ошибка по умолчанию" })
-    );
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(ERROR_BAD_REQUEST).send({
+          message: "Переданы некорректные",
+        });
+      }
+      return res
+        .status(ERROR_INTERNAL_SERVER)
+        .send({ message: "Ошибка по умолчанию" });
+    });
 };
 
 const putCardLike = (req, res) => {

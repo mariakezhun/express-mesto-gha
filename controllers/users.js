@@ -26,9 +26,16 @@ const getUserById = (req, res) => {
       }
       res.status(STATUS_OK).send({ data: user });
     })
-    .catch(() =>
-      res.status(ERROR_INTERNAL_SERVER).send({ message: "Ошибка по умолчанию" })
-    );
+    .catch((err) => {
+      if (err.name === "CastError") {
+        return res.status(ERROR_BAD_REQUEST).send({
+          message: "Переданы некорректные данные пользователя",
+        });
+      }
+      return res
+        .status(ERROR_INTERNAL_SERVER)
+        .send({ message: "Ошибка по умолчанию" });
+    });
 };
 
 const createUser = (req, res) => {
@@ -37,7 +44,7 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.status(STATUS_CREATED).send({ data: user }))
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === "CastError") {
         return res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные данные при создании пользователя",
         });
@@ -69,7 +76,7 @@ const updateProfile = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === "CastError") {
         return res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные данные при обновлении профиля",
         });
@@ -97,7 +104,7 @@ const updateAvatar = (req, res) => {
       res.status(STATUS_OK).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === "CastError") {
         return res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные данные при обновлении профиля",
         });

@@ -10,17 +10,12 @@ const {
 } = require("../controllers/users");
 
 const {
-  createUserValidation,
-  loginValidation,
   getUserByIdValidation,
   updateProfileValidation,
   updateAvatarValidation,
 } = require("../middlewares/validationJoi");
 
 router.get("/users", getUsers);
-
-router.post("/signup", createUserValidation, createUser);
-router.post("/signin", loginValidation, login);
 
 // router.post("/users", createUserValidation, createUser);
 router.get("/users/me", getCurrentUser);

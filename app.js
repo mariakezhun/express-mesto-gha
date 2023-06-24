@@ -16,8 +16,8 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.post("/signin", login);
-app.post("/signup", createUser);
+// app.post("/signin", login);
+// app.post("/signup", createUser);
 app.use(auth);
 
 app.use(routes);

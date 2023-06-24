@@ -1,4 +1,5 @@
-const { celebrate, Joi } = require("celebrate");
+const { celebrate } = require("celebrate");
+const Joi = require('joi');
 const { regLink } = require("../utils/regLink");
 
 const createUserValidation = celebrate({

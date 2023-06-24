@@ -2,8 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const routes = require("./routes/index");
-const { login, createUser } = require("./controllers/users");
 const auth = require("./middlewares/auth");
+const { errors } = require('celebrate');
 // const cookieParser = require('cookie-parser')
 
 const { PORT = 3000 } = process.env;
@@ -15,6 +15,7 @@ const app = express();
 // app.use(cookieParser());
 
 app.use(bodyParser.json());
+app.use(errors())
 
 // app.post("/signin", login);
 // app.post("/signup", createUser);

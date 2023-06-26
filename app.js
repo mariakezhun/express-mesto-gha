@@ -16,7 +16,6 @@ const { PORT = 3000 } = process.env;
 mongoose.connect("mongodb://127.0.0.1:27017/mestodb");
 
 const app = express();
-app.use(errors());
 
 // app.use(cookieParser());
 
@@ -26,6 +25,7 @@ app.post("/signup", createUserValidation, createUser);
 app.use(auth);
 
 app.use(routes);
+app.use(errors());
 
 app.listen(PORT, () => {
   console.log(`Server run at ${PORT}`);

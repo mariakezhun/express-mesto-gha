@@ -6,9 +6,9 @@ const createUserValidation = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
-    name: Joi.string().required().min(2).max(30),
+    name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(regLink),
+    // avatar: Joi.string().pattern(regLink),
   }),
 });
 
@@ -27,7 +27,7 @@ const getUserByIdValidation = celebrate({
 
 const updateProfileValidation = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
+    name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
   }),
 });

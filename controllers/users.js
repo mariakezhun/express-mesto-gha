@@ -28,7 +28,7 @@ const createUser = (req, res) => {
     .then((user) => {
       const createdUser = user.toObject();
       delete createdUser.password;
-      res.status(STATUS_CREATED).send({ data: user });
+      res.status(STATUS_CREATED).send({ data: createdUser });
     })
     .catch((err) => {
       if (err.name === "ValidationError") {

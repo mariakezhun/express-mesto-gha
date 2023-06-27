@@ -34,7 +34,7 @@ const createCard = (req, res) => {
     });
 };
 
-const deleteCardById = (req, res) => {
+const deleteCardById = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(() => {
       throw new NotFoundError("Карточка по указанному _id не найдена");
@@ -55,9 +55,11 @@ const deleteCardById = (req, res) => {
         return res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные",
         });
+      } else {
+        next(err)
       }
-      return res.send({ message: err.message });
-    });
+      // return res.send({ message: err.message });
+    })
 };
 
 const putCardLike = (req, res) => {

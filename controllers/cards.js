@@ -11,13 +11,13 @@ const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 
 
-const getCard = (req, res) => {
+const getCard = (req, res, next) => {
   Card.find({})
     .then((card) => res.send({ data: card }))
     .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
@@ -48,7 +48,7 @@ const deleteCardById = (req, res, next) => {
     })
 };
 
-const putCardLike = (req, res) => {
+const putCardLike = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -72,7 +72,7 @@ const putCardLike = (req, res) => {
     })
 };
 
-const deleteCardLike = (req, res) => {
+const deleteCardLike = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },

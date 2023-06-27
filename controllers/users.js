@@ -10,14 +10,16 @@ const {
   STATUS_CREATED,
 } = require("../utils/status");
 
-// const ConflictError = require("../errors/ConflictError");
+const ConflictError = require("../errors/ConflictError");
+const NotFoundError = require("../errors/NotFoundError");
+const BadRequestError = require("../errors/BadRequestError");
+const UnauthorizedError = require("../errors/UnauthorizedError");
+
 
 const getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .catch(() =>
-      res.status(ERROR_INTERNAL_SERVER).send({ message: "Ошибка по умолчанию" })
-    );
+    .catch(next);
 };
 
 const createUser = (req, res) => {
@@ -31,22 +33,18 @@ const createUser = (req, res) => {
       res.status(STATUS_CREATED).send({ data: createdUser });
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        return res.status(ERROR_BAD_REQUEST).send({
-          message: "Переданы некорректные данные при создании пользователя",
-        });
-      }
+      // if (err.name === "ValidationError") {
+      //   return res.status(ERROR_BAD_REQUEST).send({
+      //     message: "Переданы некорректные данные при создании пользователя",
+      //   });
+      // }
       if (err.code === 11000) {
-        return res.status(409).send({
-          message: "Пользователь с таким email уже существует",
-        });
-        // return next(
-        //   new ConflictError("Пользователь с таким email уже существует")
-        // );
+        // return res.status(409).send({
+        //   message: "Пользователь с таким email уже существует",
+        // });
+        next(new ConflictError("Пользователь с таким email уже существует"));
       } else {
-        return res
-          .status(ERROR_INTERNAL_SERVER)
-          .send({ message: "Ошибка по умолчанию" });
+        next(err)
       }
     });
 };
@@ -62,32 +60,33 @@ const login = (req, res) => {
 
       res.send({ token });
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
+    .catch(() => {
+      next(new UnauthorizedError('Неправильные почта или пароль'))
     });
 };
 
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
     .then((user) => {
-      if (!user) {
-        res
-          .status(ERROR_NOT_FOUND)
-          .send({ message: "Пользователь по указанному _id не найден" });
-        return;
-      }
+      // if (!user) {
+      //   res
+      //     .status(ERROR_NOT_FOUND)
+      //     .send({ message: "Пользователь по указанному _id не найден" });
+      //   return;
+      // }
       res.send({ data: user });
     })
-    .catch((err) => {
-      if (err.name === "CastError") {
-        return res.status(ERROR_BAD_REQUEST).send({
-          message: "Переданы некорректные данные пользователя",
-        });
-      }
-      return res
-        .status(ERROR_INTERNAL_SERVER)
-        .send({ message: "Ошибка по умолчанию" });
-    });
+    .catch(next);
+    // .catch((err) => {
+    //   if (err.name === "CastError") {
+    //     return res.status(ERROR_BAD_REQUEST).send({
+    //       message: "Переданы некорректные данные пользователя",
+    //     });
+    //   }
+    //   return res
+    //     .status(ERROR_INTERNAL_SERVER)
+    //     .send({ message: "Ошибка по умолчанию" });
+    // });
 };
 
 const getUserById = (req, res) => {
@@ -96,23 +95,25 @@ const getUserById = (req, res) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        res
-          .status(ERROR_NOT_FOUND)
-          .send({ message: "Пользователь по указанному _id не найден" });
-        return;
+        throw new NotFoundError("Пользователь по указанному _id не найден");
+        // res
+        //   .status(ERROR_NOT_FOUND)
+        //   .send({ message: "Пользователь по указанному _id не найден" });
+        // return;
       }
       res.send({ data: user });
     })
-    .catch((err) => {
-      if (err.name === "CastError") {
-        return res.status(ERROR_BAD_REQUEST).send({
-          message: "Переданы некорректные данные пользователя",
-        });
-      }
-      return res
-        .status(ERROR_INTERNAL_SERVER)
-        .send({ message: "Ошибка по умолчанию" });
-    });
+    .catch(next);
+    // .catch((err) => {
+    //   if (err.name === "CastError") {
+    //     return res.status(ERROR_BAD_REQUEST).send({
+    //       message: "Переданы некорректные данные пользователя",
+    //     });
+    //   }
+    //   return res
+    //     .status(ERROR_INTERNAL_SERVER)
+    //     .send({ message: "Ошибка по умолчанию" });
+    // });
 };
 
 const updateProfile = (req, res) => {
@@ -129,22 +130,22 @@ const updateProfile = (req, res) => {
   )
     .then((user) => {
       res.send({ data: user });
-      if (!user) {
-        return res
-          .status(ERROR_NOT_FOUND)
-          .send({ message: "Пользователь по указанному _id не найден" });
-      }
-    })
-    .catch((err) => {
-      if (err.name === "ValidationError") {
-        return res.status(ERROR_BAD_REQUEST).send({
-          message: "Переданы некорректные данные при обновлении профиля",
-        });
-      }
-      return res
-        .status(ERROR_INTERNAL_SERVER)
-        .send({ message: "Ошибка по умолчанию" });
-    });
+      // if (!user) {
+      //   return res
+      //     .status(ERROR_NOT_FOUND)
+      //     .send({ message: "Пользователь по указанному _id не найден" });
+      // }
+    }).catch(next);
+    // .catch((err) => {
+    //   if (err.name === "ValidationError") {
+    //     return res.status(ERROR_BAD_REQUEST).send({
+    //       message: "Переданы некорректные данные при обновлении профиля",
+    //     });
+    //   }
+    //   return res
+    //     .status(ERROR_INTERNAL_SERVER)
+    //     .send({ message: "Ошибка по умолчанию" });
+    // });
 };
 
 const updateAvatar = (req, res) => {
@@ -160,23 +161,23 @@ const updateAvatar = (req, res) => {
     }
   )
     .then((user) => {
-      if (!user) {
-        return res
-          .status(ERROR_NOT_FOUND)
-          .send({ message: "Пользователь по указанному _id не найден" });
-      }
+      // if (!user) {
+      //   return res
+      //     .status(ERROR_NOT_FOUND)
+      //     .send({ message: "Пользователь по указанному _id не найден" });
+      // }
       res.send({ data: user });
-    })
-    .catch((err) => {
-      if (err.name === "ValidationError") {
-        return res.status(ERROR_BAD_REQUEST).send({
-          message: "Переданы некорректные данные при обновлении аватара",
-        });
-      }
-      return res
-        .status(ERROR_INTERNAL_SERVER)
-        .send({ message: "Ошибка по умолчанию" });
-    });
+    }).catch(next);
+    // .catch((err) => {
+    //   if (err.name === "ValidationError") {
+    //     return res.status(ERROR_BAD_REQUEST).send({
+    //       message: "Переданы некорректные данные при обновлении аватара",
+    //     });
+    //   }
+    //   return res
+    //     .status(ERROR_INTERNAL_SERVER)
+    //     .send({ message: "Ошибка по умолчанию" });
+    // });
 };
 
 module.exports = {

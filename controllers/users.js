@@ -22,12 +22,21 @@ const createUser = (req, res) => {
   const { name, about, avatar, email } = req.body;
   bcrypt
     .hash(req.body.password, 10)
-    .then((hash) => User.create({ name, about, avatar, email, password: hash }))
-    .then((user) => res.status(STATUS_CREATED).send({ data: user }))
-    .catch((err) => {
+    .then((hash) => {
       if (err.name === "ValidationError") {
         return res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные данные при создании пользователя",
+        });
+      }
+      User.create({ name, about, avatar, email, password: hash });
+    })
+    .then(() => {
+      res.status(STATUS_CREATED).send({ name, about, avatar, email });
+    })
+    .catch((err) => {
+      if (err.code === 11000) {
+        return res.status(409).send({
+          message: "Пользователь с таким email уже существует",
         });
       }
       return res
@@ -41,12 +50,10 @@ const login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      // создадим токен
       const token = jwt.sign({ _id: user._id }, "some-secret-key", {
         expiresIn: "7d",
       });
 
-      // вернём токен
       res.send({ token });
     })
     .catch((err) => {

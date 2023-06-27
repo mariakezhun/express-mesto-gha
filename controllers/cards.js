@@ -7,6 +7,8 @@ const {
   STATUS_CREATED,
 } = require("../utils/status");
 
+const NotFoundError = require("../errors/NotFoundError");
+
 const getCard = (req, res) => {
   Card.find({})
     .then((card) => res.send({ data: card }))
@@ -34,13 +36,15 @@ const createCard = (req, res) => {
 
 const deleteCardById = (req, res) => {
   Card.findById(req.params.cardId)
-    .orFail()
+    .orFail(() => {
+      throw new NotFoundError("Карточка по указанному _id не найдена");
+    })
     .then((card) => {
-      if (!card) {
-        return res
-          .status(ERROR_NOT_FOUND)
-          .send({ message: "Пользователь по указанному _id не найден" });
-      }
+      // if (!card) {
+      //   return res
+      //     .status(ERROR_NOT_FOUND)
+      //     .send({ message: "Карточка по указанному _id не найдена" });
+      // }
       if (card.owner.toString() !== req.user._id) {
         return res.status(403).send({ message: "Не ваше" });
       }
@@ -52,9 +56,7 @@ const deleteCardById = (req, res) => {
           message: "Переданы некорректные",
         });
       }
-      return res
-        .status(ERROR_INTERNAL_SERVER)
-        .send({ message: "Ошибка по умолчанию" });
+      return res.send({ message: err.message });
     });
 };
 

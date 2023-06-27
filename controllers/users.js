@@ -10,7 +10,7 @@ const {
   STATUS_CREATED,
 } = require("../utils/status");
 
-const ConflictError = require("../errors/ConflictError");
+// const ConflictError = require("../errors/ConflictError");
 
 const getUsers = (req, res) => {
   User.find({})

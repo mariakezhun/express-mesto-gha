@@ -10,6 +10,8 @@ const {
   STATUS_CREATED,
 } = require("../utils/status");
 
+const ConflictError = require("../errors/ConflictError");
+
 const getUsers = (req, res) => {
   User.find({})
     .then((user) => res.send({ data: user }))
@@ -22,26 +24,30 @@ const createUser = (req, res) => {
   const { name, about, avatar, email } = req.body;
   bcrypt
     .hash(req.body.password, 10)
-    .then((hash) => {
+    .then((hash) => User.create({ name, about, avatar, email, password: hash }))
+    .then((user) => {
+      const createdUser = user.toObject();
+      delete createdUser.password;
+      res.status(STATUS_CREATED).send({ data: user });
+    })
+    .catch((err) => {
       if (err.name === "ValidationError") {
         return res.status(ERROR_BAD_REQUEST).send({
           message: "Переданы некорректные данные при создании пользователя",
         });
       }
-      User.create({ name, about, avatar, email, password: hash });
-    })
-    .then(() => {
-      res.status(STATUS_CREATED).send({ name, about, avatar, email });
-    })
-    .catch((err) => {
       if (err.code === 11000) {
         return res.status(409).send({
           message: "Пользователь с таким email уже существует",
         });
+        // return next(
+        //   new ConflictError("Пользователь с таким email уже существует")
+        // );
+      } else {
+        return res
+          .status(ERROR_INTERNAL_SERVER)
+          .send({ message: "Ошибка по умолчанию" });
       }
-      return res
-        .status(ERROR_INTERNAL_SERVER)
-        .send({ message: "Ошибка по умолчанию" });
     });
 };
 

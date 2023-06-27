@@ -1,6 +1,6 @@
-const { celebrate } = require("celebrate");
+const { celebrate } = require('celebrate');
 const Joi = require('joi');
-const { regLink } = require("../utils/regLink");
+const { regLink } = require('../utils/regLink');
 
 const createUserValidation = celebrate({
   body: Joi.object().keys({

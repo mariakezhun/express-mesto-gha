@@ -9,8 +9,8 @@ const {
 const {
   createCardValidation,
   deleteCardByIdValidation,
-  likeCardValidation
-} = require("../middlewares/validationJoi");
+  likeCardValidation,
+} = require('../middlewares/validationJoi');
 
 router.get('/cards', getCard);
 router.post('/cards', createCardValidation, createCard);

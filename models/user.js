@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const bcrypt = require("bcryptjs");
-const UnauthorizedError = require('../errors/UnauthorizedError')
+const bcrypt = require('bcryptjs');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const userSchema = new mongoose.Schema(
   {
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Поле "password" должно быть заполнено'],
       minlength: [8, 'Минимальная длина поля "about" - 8'],
-      select: false
+      select: false,
     },
   },
   { versionKey: false },

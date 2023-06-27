@@ -21,20 +21,20 @@ const loginValidation = celebrate({
 
 const getUserByIdValidation = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().hex().required(),
+    userId: Joi.string().hex().length(24).required(),
   }),
 });
 
 const updateProfileValidation = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).required().max(30),
+    about: Joi.string().min(2).required().max(30),
   }),
 });
 
 const updateAvatarValidation = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(regLink),
+    avatar: Joi.string().required().pattern(regLink),
   }),
 });
 

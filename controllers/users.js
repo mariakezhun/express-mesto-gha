@@ -9,7 +9,6 @@ const {
 
 const ConflictError = require('../errors/ConflictError');
 const NotFoundError = require('../errors/NotFoundError');
-const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const getUsers = (req, res, next) => {
   User.find({})
@@ -47,9 +46,7 @@ const login = (req, res, next) => {
 
       res.send({ token });
     })
-    .catch(() => {
-      next(new UnauthorizedError('Неправильные почта или пароль'));
-    });
+    .catch(next);
 };
 
 const getCurrentUser = (req, res, next) => {
@@ -82,7 +79,7 @@ const updateProfile = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
+      upsert: false,
     },
   )
     .then((user) => {
@@ -100,7 +97,7 @@ const updateAvatar = (req, res, next) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
+      upsert: false,
     },
   )
     .then((user) => {

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const routes = require('./routes/index');
-const ErrorMiddleware = require('./middlewares/ErrorMiddleware')
+const ErrorMiddleware = require('./middlewares/ErrorMiddleware');
 
 const { PORT = 3000 } = process.env;
 
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use(routes);
 app.use(errors());
 
-app.use(ErrorMiddleware)
+app.use(ErrorMiddleware);
 
 app.listen(PORT, () => {
   console.log(`Server run at ${PORT}`);

@@ -70,12 +70,10 @@ const getUserById = (req, res, next) => {
     .catch(next);
 };
 
-const updateProfile = (req, res, next) => {
-  const { name, about } = req.body;
-
+const updateUser = (req, res, next, data) => {
   User.findByIdAndUpdate(
     req.user._id,
-    { name, about },
+    data,
     {
       new: true,
       runValidators: true,
@@ -88,21 +86,16 @@ const updateProfile = (req, res, next) => {
     .catch(next);
 };
 
+const updateProfile = (req, res, next) => {
+  const { name, about } = req.body;
+
+  updateUser(req, res, next, { name, about });
+};
+
 const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
-  User.findByIdAndUpdate(
-    req.user._id,
-    { avatar },
-    {
-      new: true,
-      runValidators: true,
-      upsert: false,
-    },
-  )
-    .then((user) => {
-      res.send({ data: user });
-    }).catch(next);
+  updateUser(req, res, next, { avatar });
 };
 
 module.exports = {
